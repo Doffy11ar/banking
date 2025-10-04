@@ -11,6 +11,13 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from environs import Env
+
+#Start env variables
+env = Env()
+env.read_env()
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -55,7 +62,8 @@ ROOT_URLCONF = 'banking.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        # agrega la carpeta de plantillas a nivel de proyecto
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,11 +84,11 @@ WSGI_APPLICATION = 'banking.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'HOST':'localhost',
-        'NAME':'banking',
-        'USER':'postgres',
-        'PASSWORD':'sebas2020',
-        'PORT':'5432',
+        'HOST':env('DB_HOST', default='localhost'),
+        'NAME':env('DB_NAME'),
+        'USER':env('DB_USER'),
+        'PASSWORD':env('DB_PASSWORD'),
+        'PORT':env('DB_PORT', default = '5432'),
     },
 
 
@@ -125,7 +133,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+# URL para archivos estáticos (usa slash inicial)
+STATIC_URL = '/static/'
+
+# Carpeta(s) adicionales donde Django buscará archivos estáticos en desarrollo
+STATICFILES_DIRS = [BASE_DIR / 'static']  # carpeta para css/js
+
+# Carpeta destino para `collectstatic` en producción
+STATIC_ROOT = BASE_DIR / 'staticfiles'    # para collectstatic en producción
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
