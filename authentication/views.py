@@ -23,7 +23,7 @@ def country_edit(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'País actualizado correctamente.')
-            return redirect('country_list')
+            return redirect('banking_app:country_list')
     else:
         form = CountryForm(instance=country)
     return render(request, 'authentication_app/country_form.html', {'form': form, 'country': country})
